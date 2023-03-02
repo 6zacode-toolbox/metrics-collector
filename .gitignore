@@ -1,2 +1,11 @@
 *.class
 *.log
+.vscode/
+
+# sbt
+project/project/
+project/target/
+target/
+.bsp/sbt.json
+project/build.properties
+
