@@ -5,10 +5,11 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.DurationInt
 
-class PrometheusCollector {
+class Collector {
   private val prometheusHost = scala.util.Properties.envOrElse("PROMETHEUS_HOST", "127.0.0.1:9090")
 
   import PrometheusDataProtocol._
@@ -35,5 +36,22 @@ class PrometheusCollector {
 
     val convertedData = responseAsString.parseJson.convertTo[PrometheusData]
     convertedData
+  }
+
+   def collectAndMergeMetrics(metrics: List[String]): Map[String, ListBuffer[CollectorReading]] = {
+
+    var allMetrics: Map[String, ListBuffer[CollectorReading]] = Map()
+    metrics.foreach(metric => {
+      val resultCPU = readFromPrometheus(metric)
+      var listOfReadings = new ListBuffer[CollectorReading]()
+      resultCPU.data.result.foreach(result => {
+        result.values.foreach(reading => {
+          listOfReadings += new CollectorReading(result.metric.name, result.metric.job, reading.epoch, reading.value)
+        })
+
+      })
+      allMetrics += (metric -> listOfReadings)
+    })
+    allMetrics
   }
 }
