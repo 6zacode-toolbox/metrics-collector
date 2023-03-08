@@ -3,11 +3,13 @@ import code6za.tech.prometheus.{Collector, CollectorReading}
 
 import scala.collection.mutable.ListBuffer
 
+
 object Main {
   val logger = Logger(getClass.getName)
 
   def main(args: Array[String]): Unit = {
-    logger.debug("Hello world!")
+  logger.debug("Hello world!")
+
 
     val metrics = List("CPU_Temperature%5B10m%5D",
       "sensor_lm_temperature_celsius%5B10m%5D",
@@ -19,6 +21,7 @@ object Main {
     val collector = new Collector()
     var allMetrics: Map[String, ListBuffer[CollectorReading]] = collector.collectAndMergeMetrics(metrics)
     logger.debug(allMetrics.toString)
+    
   }
 
 

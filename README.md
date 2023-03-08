@@ -60,7 +60,13 @@ Structure:
 # Running 
 
 ```bash 
+docker build -t app-scala .
 
+docker run -e PROMETHEUS_HOST="127.0.0.1:9090"   app-scala
+```
+# Developing
+
+```bash 
 docker run -it -w /app \
         --name scala-sandbox \
         -e PROMETHEUS_HOST="127.0.0.1:9090" \
