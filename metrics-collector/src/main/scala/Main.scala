@@ -21,6 +21,7 @@ object Main {
     val collector = new Collector()
     var allMetrics: Map[String, ListBuffer[CollectorReading]] = collector.collectAndMergeMetrics(metrics)
     logger.debug(allMetrics.toString)
+    sys.exit(0)
     
   }
 
